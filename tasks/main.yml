@@ -1,12 +1,29 @@
 ---
-- name: Install Nginx
+- name: Install nginx
   apt:
     name: nginx
     state: present
-    update_cache: yes
 
-- name: Start and enable Nginx service
+- name: Copy nginx site configuration
+  template:
+    src: "{{ nginx_site_template_file }}"
+    dest: "{{ nginx_site_available_dir }}"
+
+- name: Validate nginx configuration
+  command: nginx -t
+  register: nginx_validation
+  failed_when: nginx_validation.rc != 0
+  changed_when: false
+
+- name: Enable nginx site
+  file:
+    src: "{{ nginx_site_available_dir }}"
+    dest: "{{ nginx_site_enabled_dir }}"
+    state: link
+
+- name: Ensure nginx is running
   service:
     name: nginx
     state: started
-    enabled: yes
+    enabled: true
+  notify: Reload nginx
