@@ -1,2 +1,2 @@
-django_static_path: "/home/ubuntu/django-locallibrary-tutorial/static"
-django_media_path: "/home/ubuntu/django-locallibrary-tutorial/media"
+---
+# vars file for nginx
